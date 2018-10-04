@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "mge-beer-pro"
+    "default": "mge-beer-pro",
+    "mge-testat-functions": "mge-testat"
   }
 }
