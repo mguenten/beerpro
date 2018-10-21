@@ -4,6 +4,7 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,6 +29,7 @@ import ch.beerpro.domain.models.Wish;
 import ch.beerpro.presentation.details.createrating.CreateRatingActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -75,6 +77,8 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
+    private BottomSheetDialog actionDialog;
+
     private RatingsRecyclerViewAdapter adapter;
 
     private DetailsViewModel model;
@@ -108,22 +112,27 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
         recyclerView.setAdapter(adapter);
         addRatingBar.setOnRatingBarChangeListener(this::addNewRating);
+
+        View view = getLayoutInflater().inflate(R.layout.single_bottom_sheet_dialog, null);
+        actionDialog = new BottomSheetDialog(this);
+        actionDialog.setContentView(view);
     }
 
     private void addNewRating(RatingBar ratingBar, float v, boolean b) {
+        startRatingActivity(v);
+    }
+
+    private void startRatingActivity(float ratingValue){
         Intent intent = new Intent(this, CreateRatingActivity.class);
         intent.putExtra(CreateRatingActivity.ITEM, model.getBeer().getValue());
-        intent.putExtra(CreateRatingActivity.RATING, v);
+        intent.putExtra(CreateRatingActivity.RATING, ratingValue);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, addRatingBar, "rating");
         startActivity(intent, options.toBundle());
     }
 
     @OnClick(R.id.actionsButton)
     public void showBottomSheetDialog() {
-        View view = getLayoutInflater().inflate(R.layout.single_bottom_sheet_dialog, null);
-        BottomSheetDialog dialog = new BottomSheetDialog(this);
-        dialog.setContentView(view);
-        dialog.show();
+        actionDialog.show();
     }
 
     private void updateBeer(Beer item) {
@@ -142,11 +151,24 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
     private void updateRatings(List<Rating> ratings) {
         adapter.submitList(new ArrayList<>(ratings));
+        for (Rating rating : ratings){
+            if(rating.getUserId().equals(model.getCurrentUser().getUid())){
+                addRatingBar.setIsIndicator(true);
+                addRatingBar.setOnRatingBarChangeListener(null);
+                addRatingBar.setRating(rating.getRating());
+                break;
+            }
+        }
     }
 
     @Override
     public void onRatingLikedListener(Rating rating) {
         model.toggleLike(rating);
+    }
+
+    public void onAddRatingClickedListener(View view){
+        actionDialog.hide();
+        startRatingActivity(0);
     }
 
     @OnClick(R.id.wishlist)
