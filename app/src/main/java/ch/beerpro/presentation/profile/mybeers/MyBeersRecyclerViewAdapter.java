@@ -95,6 +95,9 @@ public class MyBeersRecyclerViewAdapter extends ListAdapter<MyBeer, MyBeersRecyc
         @BindView(R.id.removeFromWishlist)
         Button removeFromWishlist;
 
+        @BindView(R.id.removeFromFridge)
+        Button removeFromFridge;
+
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, itemView);
@@ -115,6 +118,7 @@ public class MyBeersRecyclerViewAdapter extends ListAdapter<MyBeer, MyBeersRecyc
             numRatings.setText(itemView.getResources().getString(R.string.fmt_num_ratings, item.getNumRatings()));
             itemView.setOnClickListener(v -> listener.onMoreClickedListener(photo, item));
             removeFromWishlist.setOnClickListener(v -> listener.onWishClickedListener(item));
+            removeFromFridge.setOnClickListener(v -> listener.onFridgeItemClickedListener(item));
 
             String formattedDate =
                     DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(entry.getDate());

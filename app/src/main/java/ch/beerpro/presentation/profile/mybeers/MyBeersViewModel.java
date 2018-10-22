@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import ch.beerpro.data.repositories.*;
-import ch.beerpro.domain.models.Beer;
-import ch.beerpro.domain.models.Rating;
-import ch.beerpro.domain.models.Wish;
-import ch.beerpro.domain.models.MyBeer;
+import ch.beerpro.domain.models.*;
 import com.google.common.base.Strings;
 
 import java.util.ArrayList;
@@ -24,11 +21,13 @@ public class MyBeersViewModel extends ViewModel implements CurrentUser {
     private final MutableLiveData<String> searchTerm = new MutableLiveData<>();
 
     private final WishlistRepository wishlistRepository;
+    private final FridgeRepository fridgeRepository;
     private final LiveData<List<MyBeer>> myFilteredBeers;
 
     public MyBeersViewModel() {
 
         wishlistRepository = new WishlistRepository();
+        fridgeRepository = new FridgeRepository();
         BeersRepository beersRepository = new BeersRepository();
         MyBeersRepository myBeersRepository = new MyBeersRepository();
         RatingsRepository ratingsRepository = new RatingsRepository();
@@ -36,6 +35,7 @@ public class MyBeersViewModel extends ViewModel implements CurrentUser {
         LiveData<List<Beer>> allBeers = beersRepository.getAllBeers();
         MutableLiveData<String> currentUserId = new MutableLiveData<>();
         LiveData<List<Wish>> myWishlist = wishlistRepository.getMyWishlist(currentUserId);
+        LiveData<List<FridgeItem>> myFridge = fridgeRepository.getMyFridge(currentUserId);
         LiveData<List<Rating>> myRatings = ratingsRepository.getMyRatings(currentUserId);
 
         LiveData<List<MyBeer>> myBeers = myBeersRepository.getMyBeers(allBeers, myWishlist, myRatings);
@@ -69,6 +69,10 @@ public class MyBeersViewModel extends ViewModel implements CurrentUser {
 
     public void toggleItemInWishlist(String beerId) {
         wishlistRepository.toggleUserWishlistItem(getCurrentUser().getUid(), beerId);
+    }
+
+    public void toggleItemInFridge(String beerId) {
+        fridgeRepository.toggleUserFridgeItem(getCurrentUser().getUid(), beerId);
     }
 
     public void setSearchTerm(String searchTerm) {

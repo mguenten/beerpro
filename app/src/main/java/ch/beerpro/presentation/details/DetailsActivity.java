@@ -23,6 +23,7 @@ import butterknife.OnClick;
 import ch.beerpro.GlideApp;
 import ch.beerpro.R;
 import ch.beerpro.domain.models.Beer;
+import ch.beerpro.domain.models.FridgeItem;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
 import ch.beerpro.presentation.details.createrating.CreateRatingActivity;
@@ -62,6 +63,9 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
     @BindView(R.id.wishlist)
     ToggleButton wishlist;
+
+    @BindView(R.id.fridge)
+    ToggleButton fridge;
 
     @BindView(R.id.manufacturer)
     TextView manufacturer;
@@ -105,6 +109,7 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         model.getBeer().observe(this, this::updateBeer);
         model.getRatings().observe(this, this::updateRatings);
         model.getWish().observe(this, this::toggleWishlistView);
+        model.getFridgeItem().observe(this, this::toggleFridgeView);
 
         recyclerView.setAdapter(adapter);
         addRatingBar.setOnRatingBarChangeListener(this::addNewRating);
@@ -169,6 +174,29 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
             int color = getResources().getColor(android.R.color.darker_gray);
             setDrawableTint(wishlist, color);
             wishlist.setChecked(false);
+        }
+    }
+
+    @OnClick(R.id.fridge)
+    public void onFridgeItemClickedListener(View view) {
+        model.toggleItemInFridge(model.getBeer().getValue().getId());
+        /*
+         * We won't get an update from firestore when the wish is removed, so we need to reset the UI state ourselves.
+         * */
+        if (!fridge.isChecked()) {
+            toggleFridgeView(null);
+        }
+    }
+
+    private void toggleFridgeView(FridgeItem fridgeItem) {
+        if (fridgeItem != null) {
+            int color = getResources().getColor(R.color.colorPrimary);
+            setDrawableTint(fridge, color);
+            fridge.setChecked(true);
+        } else {
+            int color = getResources().getColor(android.R.color.darker_gray);
+            setDrawableTint(fridge, color);
+            fridge.setChecked(false);
         }
     }
 
