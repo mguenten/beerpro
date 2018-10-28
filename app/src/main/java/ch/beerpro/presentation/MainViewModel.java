@@ -45,7 +45,7 @@ public class MainViewModel extends ViewModel implements CurrentUser {
         myWishlist = wishlistRepository.getMyWishlist(currentUserId);
         myRatings = ratingsRepository.getMyRatings(currentUserId);
         myFridge = fridgeRepository.getMyFridge(currentUserId);
-        myBeers = myBeersRepository.getMyBeers(allBeers, myWishlist, myRatings);
+        myBeers = myBeersRepository.getMyBeers(allBeers, myWishlist, myRatings, myFridge);
 
         /*
          * Set the current user id, which is used as input for the getMyWishlist and getMyRatings calls above.
@@ -89,16 +89,7 @@ public class MainViewModel extends ViewModel implements CurrentUser {
         return wishlistRepository.toggleUserWishlistItem(getCurrentUser().getUid(), itemId);
     }
 
-    public Task<Void> toggleItemInFridge(String itemId) {
-        return fridgeRepository.toggleUserFridgeItem(getCurrentUser().getUid(), itemId);
-    }
-
     public LiveData<List<Pair<Rating, Wish>>> getAllRatingsWithWishes() {
         return ratingsRepository.getAllRatingsWithWishes(myWishlist);
     }
-
-    public LiveData<List<Pair<Rating, FridgeItem>>> getAllRatingsWithFridge() {
-        return ratingsRepository.getAllRatingsWithFridge(myFridge);
-    }
-
 }

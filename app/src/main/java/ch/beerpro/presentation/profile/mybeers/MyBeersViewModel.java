@@ -38,7 +38,7 @@ public class MyBeersViewModel extends ViewModel implements CurrentUser {
         LiveData<List<FridgeItem>> myFridge = fridgeRepository.getMyFridge(currentUserId);
         LiveData<List<Rating>> myRatings = ratingsRepository.getMyRatings(currentUserId);
 
-        LiveData<List<MyBeer>> myBeers = myBeersRepository.getMyBeers(allBeers, myWishlist, myRatings);
+        LiveData<List<MyBeer>> myBeers = myBeersRepository.getMyBeers(allBeers, myWishlist, myRatings, myFridge);
 
         myFilteredBeers = map(zip(searchTerm, myBeers), MyBeersViewModel::filter);
 

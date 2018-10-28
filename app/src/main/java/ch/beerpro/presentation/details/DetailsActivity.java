@@ -181,7 +181,7 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
     public void onFridgeItemClickedListener(View view) {
         model.toggleItemInFridge(model.getBeer().getValue().getId());
         /*
-         * We won't get an update from firestore when the wish is removed, so we need to reset the UI state ourselves.
+         * We won't get an update from firestore when the fridgeItem is removed, so we need to reset the UI state ourselves.
          * */
         if (!fridge.isChecked()) {
             toggleFridgeView(null);

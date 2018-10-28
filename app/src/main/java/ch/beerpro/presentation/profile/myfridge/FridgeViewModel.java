@@ -32,7 +32,11 @@ public class FridgeViewModel extends ViewModel implements CurrentUser {
         return fridgeRepository.getMyFridgeWithBeers(currentUserId, beersRepository.getAllBeers());
     }
 
-    public Task<Void> toggleItemInFridge(String itemId) {
-        return fridgeRepository.toggleUserFridgeItem(getCurrentUser().getUid(), itemId);
+    public Task<Void> addBottleInFridge(String itemId) {
+        return fridgeRepository.addBottleInUserFridge(getCurrentUser().getUid(), itemId);
+    }
+
+    public Task<Void> removeBottleFromFridge(String itemId) {
+        return fridgeRepository.removeBottleFromUserFridge(getCurrentUser().getUid(), itemId);
     }
 }

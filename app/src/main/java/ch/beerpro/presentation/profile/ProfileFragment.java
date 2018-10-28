@@ -104,7 +104,7 @@ public class ProfileFragment extends Fragment {
         startActivity(intent);
     }
 
-    @OnClick(R.id.myWishlist)
+    @OnClick(R.id.myFridge)
     public void handleMyFridgeClick(View view) {
         Intent intent = new Intent(getActivity(), FridgeActivity.class);
         startActivity(intent);

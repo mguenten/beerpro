@@ -11,8 +11,6 @@ import java.util.Date;
 
 @IgnoreExtraProperties
 @Data
-@NoArgsConstructor
-@RequiredArgsConstructor
 public class FridgeItem implements Entity {
     public static final String COLLECTION = "fridge";
     public static final String FIELD_ID = "id";
@@ -33,6 +31,20 @@ public class FridgeItem implements Entity {
     private Date addedAt;
 
     private int count;
+
+    public FridgeItem () {
+    }
+
+    public FridgeItem (String userId, String beerId, Date addedAt) {
+        this.userId = userId;
+        this.beerId = beerId;
+        this.addedAt = addedAt;
+        count = 1;
+    }
+
+    public int getCount() {
+        return count;
+    }
 
     public static String generateId(String userId, String beerId) {
         return String.format("%s_%s", userId, beerId);

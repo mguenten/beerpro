@@ -9,6 +9,7 @@ import ch.beerpro.domain.utils.FirestoreQueryLiveData;
 import ch.beerpro.domain.utils.FirestoreQueryLiveDataArray;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -35,6 +36,49 @@ public class FridgeRepository {
         DocumentReference document = FirebaseFirestore.getInstance().collection(FridgeItem.COLLECTION)
                 .document(FridgeItem.generateId(userId, beer.getId()));
         return new FirestoreQueryLiveData<>(document, FridgeItem.class);
+    }
+
+    public Task<Void> addBottleInUserFridge(String userId, String itemId) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        String fridgeItemId = FridgeItem.generateId(userId, itemId);
+
+        DocumentReference fridgeItemEntryQuery = db.collection(FridgeItem.COLLECTION).document(fridgeItemId);
+
+        return fridgeItemEntryQuery.get().continueWithTask(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                FridgeItem fridgeItem = task.getResult().toObject(FridgeItem.class);
+                int count = fridgeItem.getCount();
+                count++;
+                return fridgeItemEntryQuery.set(count);
+            } else {
+                throw task.getException();
+            }
+        });
+    }
+
+    public Task<Void> removeBottleFromUserFridge(String userId, String itemId) {
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        String fridgeItemId = FridgeItem.generateId(userId, itemId);
+
+        DocumentReference fridgeItemEntryQuery = db.collection(FridgeItem.COLLECTION).document(fridgeItemId);
+
+        return fridgeItemEntryQuery.get().continueWithTask(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                FridgeItem fridgeItem = task.getResult().toObject(FridgeItem.class);
+                int count = fridgeItem.getCount();
+                count--;
+                if (count == 0) {
+                    return fridgeItemEntryQuery.delete();
+                }
+                return fridgeItemEntryQuery.set(count);
+            } else {
+                throw task.getException();
+            }
+        });
     }
 
     public Task<Void> toggleUserFridgeItem(String userId, String itemId) {

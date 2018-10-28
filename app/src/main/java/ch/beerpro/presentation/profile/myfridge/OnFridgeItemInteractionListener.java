@@ -6,5 +6,8 @@ import ch.beerpro.domain.models.Beer;
 public interface OnFridgeItemInteractionListener {
     void onMoreClickedListener(ImageView photo, Beer beer);
 
-    void onFridgeClickedListener(Beer beer);
+    void onMoreFridgeItemClickedListener(Beer beer);
+
+    void onLessFridgeItemClickedListener(Beer beer);
+
 }

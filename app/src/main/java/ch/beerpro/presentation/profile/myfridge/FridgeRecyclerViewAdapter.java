@@ -40,7 +40,7 @@ public class FridgeRecyclerViewAdapter extends ListAdapter<Pair<FridgeItem, Beer
     @Override
     public FridgeRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.activity_my_wishlist_listentry, parent, false);
+        View view = layoutInflater.inflate(R.layout.activity_my_fridge_listentry, parent, false);
         return new FridgeRecyclerViewAdapter.ViewHolder(view);
     }
 
@@ -70,11 +70,14 @@ public class FridgeRecyclerViewAdapter extends ListAdapter<Pair<FridgeItem, Beer
         @BindView(R.id.numRatings)
         TextView numRatings;
 
-        @BindView(R.id.addedAt)
-        TextView addedAt;
+        @BindView(R.id.count)
+        TextView count;
 
         @BindView(R.id.removeFromFridge)
         Button remove;
+
+        @BindView(R.id.addToFridge)
+        Button add;
 
         ViewHolder(View view) {
             super(view);
@@ -93,10 +96,9 @@ public class FridgeRecyclerViewAdapter extends ListAdapter<Pair<FridgeItem, Beer
             numRatings.setText(itemView.getResources().getString(R.string.fmt_num_ratings, item.getNumRatings()));
             itemView.setOnClickListener(v -> listener.onMoreClickedListener(photo, item));
 
-            String formattedDate =
-                    DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(fridgeItem.getAddedAt());
-            addedAt.setText(formattedDate);
-            remove.setOnClickListener(v -> listener.onFridgeClickedListener(item));
+            count.setText("2");
+            remove.setOnClickListener(v -> listener.onLessFridgeItemClickedListener(item));
+            add.setOnClickListener(v -> listener.onMoreFridgeItemClickedListener(item));
         }
 
     }
