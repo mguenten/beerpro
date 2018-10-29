@@ -46,6 +46,14 @@ public class FridgeItem implements Entity {
         return count;
     }
 
+    public void increaseCount () {
+        count++;
+    }
+
+    public void decreaseCount () {
+        count--;
+    }
+
     public static String generateId(String userId, String beerId) {
         return String.format("%s_%s", userId, beerId);
     }

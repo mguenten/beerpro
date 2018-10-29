@@ -54,13 +54,6 @@ public class MyRatingsViewModel extends ViewModel implements CurrentUser {
         return myWishlist;
     }
 
-    public void toggleItemInFridge(String beerId) {
-        fridgeRepository.toggleUserFridgeItem(getCurrentUser().getUid(), beerId);
-    }
-
-    public LiveData<List<Pair<Rating, FridgeItem>>> getMyRatingsWithFridge() {
-        return ratingsRepository.getMyRatingsWithFridge(currentUserId, getMyFridge());
-    }
 
     public LiveData<List<FridgeItem>> getMyFridge() {
         return myFridge;

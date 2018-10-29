@@ -15,10 +15,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ch.beerpro.GlideApp;
 import ch.beerpro.R;
-import ch.beerpro.domain.models.Beer;
-import ch.beerpro.domain.models.MyBeer;
-import ch.beerpro.domain.models.MyBeerFromRating;
-import ch.beerpro.domain.models.MyBeerFromWishlist;
+import ch.beerpro.domain.models.*;
 import ch.beerpro.presentation.utils.DrawableHelpers;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -128,11 +125,19 @@ public class MyBeersRecyclerViewAdapter extends ListAdapter<MyBeer, MyBeersRecyc
                 DrawableHelpers
                         .setDrawableTint(removeFromWishlist, itemView.getResources().getColor(R.color.colorPrimary));
                 onTheListSince.setText("auf der Wunschliste seit");
-            } else if (entry instanceof MyBeerFromRating) {
+            } else {
                 DrawableHelpers.setDrawableTint(removeFromWishlist,
                         itemView.getResources().getColor(android.R.color.darker_gray));
                 removeFromWishlist.setText("Wunschliste");
-                onTheListSince.setText("beurteilt am");
+            }
+
+            if (entry instanceof MyBeerFromFridge) {
+                DrawableHelpers
+                        .setDrawableTint(removeFromFridge, itemView.getResources().getColor(R.color.colorPrimary));
+            } else {
+                DrawableHelpers.setDrawableTint(removeFromFridge,
+                        itemView.getResources().getColor(android.R.color.darker_gray));
+                removeFromFridge.setText("Kühlschrank");
             }
         }
     }

@@ -49,9 +49,8 @@ public class FridgeRepository {
         return fridgeItemEntryQuery.get().continueWithTask(task -> {
             if (task.isSuccessful() && task.getResult().exists()) {
                 FridgeItem fridgeItem = task.getResult().toObject(FridgeItem.class);
-                int count = fridgeItem.getCount();
-                count++;
-                return fridgeItemEntryQuery.set(count);
+                fridgeItem.increaseCount();
+                return fridgeItemEntryQuery.set(fridgeItem);
             } else {
                 throw task.getException();
             }
@@ -70,11 +69,11 @@ public class FridgeRepository {
             if (task.isSuccessful() && task.getResult().exists()) {
                 FridgeItem fridgeItem = task.getResult().toObject(FridgeItem.class);
                 int count = fridgeItem.getCount();
-                count--;
-                if (count == 0) {
+                if (count == 1) {
                     return fridgeItemEntryQuery.delete();
                 }
-                return fridgeItemEntryQuery.set(count);
+                fridgeItem.decreaseCount();
+                return fridgeItemEntryQuery.set(fridgeItem);
             } else {
                 throw task.getException();
             }

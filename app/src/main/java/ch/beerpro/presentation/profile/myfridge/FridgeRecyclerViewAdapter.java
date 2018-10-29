@@ -18,10 +18,11 @@ import ch.beerpro.GlideApp;
 import ch.beerpro.R;
 import ch.beerpro.domain.models.Beer;
 import ch.beerpro.domain.models.FridgeItem;
+import ch.beerpro.domain.models.MyBeer;
+import ch.beerpro.domain.models.MyBeerFromFridge;
+import ch.beerpro.presentation.utils.DrawableHelpers;
 import ch.beerpro.presentation.utils.EntityPairDiffItemCallback;
 import com.bumptech.glide.request.RequestOptions;
-
-import java.text.DateFormat;
 
 public class FridgeRecyclerViewAdapter extends ListAdapter<Pair<FridgeItem, Beer>, FridgeRecyclerViewAdapter.ViewHolder> {
 
@@ -45,7 +46,7 @@ public class FridgeRecyclerViewAdapter extends ListAdapter<Pair<FridgeItem, Beer
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final FridgeRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         Pair<FridgeItem, Beer> item = getItem(position);
         holder.bind(item.first, item.second, listener);
     }
