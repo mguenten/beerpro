@@ -3,6 +3,7 @@ package ch.beerpro.presentation.details;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Optional;
 import ch.beerpro.GlideApp;
 import ch.beerpro.R;
 import ch.beerpro.domain.models.Beer;
@@ -129,6 +131,17 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         dialog.setContentView(view);
         dialog.show();
+    }
+
+    @Optional
+    @OnClick(R.id.notifyImprovement)
+    public void notifyImprovement() {
+        String beerId = model.getBeer().getValue().getId();
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:m.thevenaz@gmail.com"));
+        intent.putExtra(Intent.EXTRA_SUBJECT, "BeerId: " + beerId);
+
+        startActivity(intent);
     }
 
     private void updateBeer(Beer item) {
