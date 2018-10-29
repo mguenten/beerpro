@@ -53,11 +53,12 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/addToFridge"
+            android:id="@+id/fridge"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onFridgeItemClickedListener"
             android:drawableTop="@drawable/ic_refrigerator"
             android:drawableTint="@android:color/darker_gray"
             android:text="In den Kühlschrank"
@@ -75,6 +76,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="notifyImprovement"
             android:drawableTop="@drawable/ic_create_black_24dp"
             android:drawableTint="@android:color/darker_gray"
             android:text="Verbesserungsvorschlag melden"

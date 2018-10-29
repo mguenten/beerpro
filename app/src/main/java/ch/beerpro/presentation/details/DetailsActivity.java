@@ -133,14 +133,11 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         dialog.show();
     }
 
-    @Optional
-    @OnClick(R.id.notifyImprovement)
-    public void notifyImprovement() {
-        String beerId = model.getBeer().getValue().getId();
+    public void notifyImprovement(View view) {
+        String beerName = model.getBeer().getValue().getName();
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:m.thevenaz@gmail.com"));
-        intent.putExtra(Intent.EXTRA_SUBJECT, "BeerId: " + beerId);
-
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Betrifft " + beerName);
         startActivity(intent);
     }
 
