@@ -137,7 +137,7 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         String beerName = model.getBeer().getValue().getName();
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:m.thevenaz@gmail.com"));
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Betrifft " + beerName);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Betrifft Bier \"" + beerName + "\"");
         startActivity(intent);
     }
 
