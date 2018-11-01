@@ -31,7 +31,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ch.beerpro.GlideApp;
 import ch.beerpro.R;
-import ch.beerpro.data.repositories.MyBeersRepository;
 import ch.beerpro.data.repositories.PrivateNoteRepository;
 import ch.beerpro.domain.models.Beer;
 import ch.beerpro.domain.models.PrivateNote;
@@ -234,8 +233,7 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
             EditText privateNoteEditText = new EditText(builder.getContext());
             privateNoteEditText.setLines(4);
             LiveData<PrivateNote> newprivatenote = PrivateNoteRepository.getPrivateNote("9wkViKNZraQJ3kYzwMI1Elie0St1", "beerid");
-            // TODO: Auf newprivatenote zugreifen
-            Log.d("privatenode", newprivatenote.getPrivateNote());
+            Log.d("privatenode", newprivatenote.getValue().getPrivateNote());
             if(true) {
                 privateNoteEditText.setText("This is the private Note to this beer");
             }

@@ -2,6 +2,7 @@ package ch.beerpro.data.repositories;
 
 import android.util.Log;
 
+import ch.beerpro.domain.models.Wish;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,11 +22,9 @@ public class PrivateNoteRepository {
 
     public static LiveData<PrivateNote> getPrivateNote(String userId, String beerId) {
         Log.d("privatenote", "method_getPrivateNote");
-        return new FirestoreQueryLiveData<>(FirebaseFirestore
-                .getInstance()
-                .collection(PrivateNote.COLLECTION)
-                .whereEqualTo(PrivateNote.FIELD_USER_ID, userId)
-                .whereEqualTo(PrivateNote.FIELD_BEER_ID, beerId), PrivateNote.class);
+        DocumentReference document = FirebaseFirestore.getInstance().collection(PrivateNote.COLLECTION)
+                .document(PrivateNote.generateId(userId, beerId));
+        return new FirestoreQueryLiveData<>(document, PrivateNote.class);
     }
 
     public static void addPrivateNote(String beerId, String privateNote) {
