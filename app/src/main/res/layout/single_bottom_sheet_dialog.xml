@@ -77,7 +77,7 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/ic_create_black_24dp"
             android:drawableTint="@android:color/darker_gray"
-            android:text="Private Notiz hinzufügen"
+            android:text="Private Notiz"
             android:textColor="@android:color/darker_gray"
             android:textSize="10sp" />
 

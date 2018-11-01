@@ -1,5 +1,7 @@
 package ch.beerpro.data.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import ch.beerpro.domain.models.Beer;
 import ch.beerpro.domain.models.Entity;

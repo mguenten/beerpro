@@ -1,5 +1,7 @@
 package ch.beerpro.data.repositories;
 
+import android.util.Log;
+
 import ch.beerpro.presentation.utils.EntityClassSnapshotParser;
 import ch.beerpro.domain.models.Rating;
 import com.google.firebase.auth.FirebaseAuth;

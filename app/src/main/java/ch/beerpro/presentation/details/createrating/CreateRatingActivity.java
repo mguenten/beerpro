@@ -218,6 +218,7 @@ public class CreateRatingActivity extends AppCompatActivity {
         String comment = ratingText.getText().toString();
         // TODO show a spinner!
         // TODO return the new rating to update the new average immediately
+
         model.saveRating(model.getItem(), rating, comment, model.getPhoto())
                 .addOnSuccessListener(task -> onBackPressed())
                 .addOnFailureListener(error -> Log.e(TAG, "Could not save rating", error));
