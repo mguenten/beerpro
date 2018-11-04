@@ -33,6 +33,7 @@ import ch.beerpro.GlideApp;
 import ch.beerpro.R;
 import ch.beerpro.data.repositories.PrivateNoteRepository;
 import ch.beerpro.domain.models.Beer;
+import ch.beerpro.domain.models.MyBeer;
 import ch.beerpro.domain.models.PrivateNote;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
@@ -233,9 +234,11 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
             EditText privateNoteEditText = new EditText(builder.getContext());
             privateNoteEditText.setLines(4);
             LiveData<PrivateNote> newprivatenote = PrivateNoteRepository.getPrivateNote("9wkViKNZraQJ3kYzwMI1Elie0St1", "beerid");
-            Log.d("privatenode", newprivatenote.getValue().getPrivateNote());
-            if(true) {
-                privateNoteEditText.setText("This is the private Note to this beer");
+            Log.d("privatenode", "newprivatenote.getValue().getPrivateNote() || " + newprivatenote.getValue().FIELD_PRIVATENOTE);
+            if(newprivatenote.getValue().FIELD_PRIVATENOTE == null) {
+                privateNoteEditText.setText("");
+            } else {
+                privateNoteEditText.setText(newprivatenote.getValue().FIELD_PRIVATENOTE);
             }
             //Start Asynchtask and check if data is available
             builder.setMessage("Private Notiz")
@@ -243,7 +246,7 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             PrivateNoteRepository.addPrivateNote("beerid", privateNoteEditText.getText().toString());
-                            Log.d("privatenote", privateNoteEditText.getText().toString());
+                            Log.d("privatenote", "privateNoteEditText.getText().toString() || " + privateNoteEditText.getText().toString());
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

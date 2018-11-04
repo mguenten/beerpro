@@ -21,9 +21,9 @@ import ch.beerpro.domain.utils.FirestoreQueryLiveDataArray;
 public class PrivateNoteRepository {
 
     public static LiveData<PrivateNote> getPrivateNote(String userId, String beerId) {
-        Log.d("privatenote", "method_getPrivateNote");
         DocumentReference document = FirebaseFirestore.getInstance().collection(PrivateNote.COLLECTION)
                 .document(PrivateNote.generateId(userId, beerId));
+        Log.d("privatenote", "ID of dataentry || " + document.getId());
         return new FirestoreQueryLiveData<>(document, PrivateNote.class);
     }
 
