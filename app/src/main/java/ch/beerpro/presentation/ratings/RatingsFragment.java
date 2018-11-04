@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ch.beerpro.R;
+import ch.beerpro.domain.models.FridgeItem;
 import ch.beerpro.presentation.MainViewModel;
 import ch.beerpro.presentation.details.DetailsActivity;
 import ch.beerpro.domain.models.Rating;

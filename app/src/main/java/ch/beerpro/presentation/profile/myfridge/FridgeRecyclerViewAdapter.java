@@ -1,4 +1,4 @@
-package ch.beerpro.presentation.profile.mywishlist;
+package ch.beerpro.presentation.profile.myfridge;
 
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -16,42 +16,38 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ch.beerpro.GlideApp;
 import ch.beerpro.R;
+import ch.beerpro.domain.models.Beer;
+import ch.beerpro.domain.models.FridgeItem;
 import ch.beerpro.domain.models.MyBeer;
 import ch.beerpro.domain.models.MyBeerFromFridge;
 import ch.beerpro.presentation.utils.DrawableHelpers;
 import ch.beerpro.presentation.utils.EntityPairDiffItemCallback;
-import ch.beerpro.domain.models.Beer;
-import ch.beerpro.domain.models.Wish;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
-import java.text.DateFormat;
+public class FridgeRecyclerViewAdapter extends ListAdapter<Pair<FridgeItem, Beer>, FridgeRecyclerViewAdapter.ViewHolder> {
 
+    private static final String TAG = "FridgeRecyclerViewAda";
 
-public class WishlistRecyclerViewAdapter extends ListAdapter<Pair<Wish, Beer>, WishlistRecyclerViewAdapter.ViewHolder> {
+    private static final DiffUtil.ItemCallback<Pair<FridgeItem, Beer>> DIFF_CALLBACK = new EntityPairDiffItemCallback<>();
 
-    private static final String TAG = "WishlistRecyclerViewAda";
+    private final OnFridgeItemInteractionListener listener;
 
-    private static final DiffUtil.ItemCallback<Pair<Wish, Beer>> DIFF_CALLBACK = new EntityPairDiffItemCallback<>();
-
-    private final OnWishlistItemInteractionListener listener;
-
-    public WishlistRecyclerViewAdapter(OnWishlistItemInteractionListener listener) {
+    public FridgeRecyclerViewAdapter(OnFridgeItemInteractionListener listener) {
         super(DIFF_CALLBACK);
         this.listener = listener;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FridgeRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.activity_my_wishlist_listentry, parent, false);
-        return new ViewHolder(view);
+        View view = layoutInflater.inflate(R.layout.activity_my_fridge_listentry, parent, false);
+        return new FridgeRecyclerViewAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        Pair<Wish, Beer> item = getItem(position);
+        Pair<FridgeItem, Beer> item = getItem(position);
         holder.bind(item.first, item.second, listener);
     }
 
@@ -75,21 +71,21 @@ public class WishlistRecyclerViewAdapter extends ListAdapter<Pair<Wish, Beer>, W
         @BindView(R.id.numRatings)
         TextView numRatings;
 
-        @BindView(R.id.addedAt)
-        TextView addedAt;
-
-        @BindView(R.id.removeFromWishlist)
-        Button removeFromWishList;
+        @BindView(R.id.count)
+        TextView count;
 
         @BindView(R.id.removeFromFridge)
-        Button removeFromFridge;
+        Button remove;
+
+        @BindView(R.id.addToFridge)
+        Button add;
 
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, itemView);
         }
 
-        void bind(Wish wish, Beer item, OnWishlistItemInteractionListener listener) {
+        void bind(FridgeItem fridgeItem, Beer item, OnFridgeItemInteractionListener listener) {
             name.setText(item.getName());
             manufacturer.setText(item.getManufacturer());
             category.setText(item.getCategory());
@@ -101,11 +97,9 @@ public class WishlistRecyclerViewAdapter extends ListAdapter<Pair<Wish, Beer>, W
             numRatings.setText(itemView.getResources().getString(R.string.fmt_num_ratings, item.getNumRatings()));
             itemView.setOnClickListener(v -> listener.onMoreClickedListener(photo, item));
 
-            String formattedDate =
-                    DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT).format(wish.getAddedAt());
-            addedAt.setText(formattedDate);
-            removeFromWishList.setOnClickListener(v -> listener.onWishClickedListener(item));
-            removeFromFridge.setOnClickListener(v -> listener.onFridgeItemClickedListener(item));
+            count.setText("" + fridgeItem.getCount());
+            remove.setOnClickListener(v -> listener.onLessFridgeItemClickedListener(item));
+            add.setOnClickListener(v -> listener.onMoreFridgeItemClickedListener(item));
         }
 
     }

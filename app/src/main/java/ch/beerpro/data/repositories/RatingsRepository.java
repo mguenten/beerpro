@@ -2,6 +2,7 @@ package ch.beerpro.data.repositories;
 
 import android.util.Pair;
 import androidx.lifecycle.LiveData;
+import ch.beerpro.domain.models.FridgeItem;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
 import ch.beerpro.domain.utils.FirestoreQueryLiveDataArray;
@@ -55,6 +56,26 @@ public class RatingsRepository {
         });
     }
 
+    public LiveData<List<Pair<Rating, FridgeItem>>> getAllRatingsWithFridge(LiveData<List<FridgeItem>> myFridge) {
+        return map(combineLatest(getAllRatings(), map(myFridge, entries -> {
+            HashMap<String, FridgeItem> byId = new HashMap<>();
+            for (FridgeItem entry : entries) {
+                byId.put(entry.getBeerId(), entry);
+            }
+            return byId;
+        })), input -> {
+            List<Rating> ratings = input.first;
+            HashMap<String, FridgeItem> fridgeByItem = input.second;
+
+            ArrayList<Pair<Rating, FridgeItem>> result = new ArrayList<>();
+            for (Rating rating : ratings) {
+                FridgeItem fridgeItem = fridgeByItem.get(rating.getBeerId());
+                result.add(Pair.create(rating, fridgeItem));
+            }
+            return result;
+        });
+    }
+
     public LiveData<List<Rating>> getAllRatings() {
         return allRatings;
     }
@@ -79,6 +100,27 @@ public class RatingsRepository {
             for (Rating rating : ratings) {
                 Wish wish = wishesByItem.get(rating.getBeerId());
                 result.add(Pair.create(rating, wish));
+            }
+            return result;
+        });
+    }
+
+    public LiveData<List<Pair<Rating, FridgeItem>>> getMyRatingsWithFridge(LiveData<String> currentUserId,
+                                                                     LiveData<List<FridgeItem>> myFridge) {
+        return map(combineLatest(getMyRatings(currentUserId), myFridge), input -> {
+            List<Rating> ratings = input.first;
+
+            // Optimization: also do this in a transformation
+            List<FridgeItem> fridge = input.second == null ? Collections.emptyList() : input.second;
+            HashMap<String, FridgeItem> fridgeByItem = new HashMap<>();
+            for (FridgeItem fridgeItem : fridge) {
+                fridgeByItem.put(fridgeItem.getBeerId(), fridgeItem);
+            }
+
+            ArrayList<Pair<Rating, FridgeItem>> result = new ArrayList<>();
+            for (Rating rating : ratings) {
+                FridgeItem fridgeItem = fridgeByItem.get(rating.getBeerId());
+                result.add(Pair.create(rating, fridgeItem));
             }
             return result;
         });
