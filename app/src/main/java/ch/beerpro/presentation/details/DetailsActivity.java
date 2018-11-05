@@ -1,12 +1,19 @@
 package ch.beerpro.presentation.details;
 
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -14,6 +21,8 @@ import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,13 +33,19 @@ import butterknife.OnClick;
 import butterknife.Optional;
 import ch.beerpro.GlideApp;
 import ch.beerpro.R;
+import ch.beerpro.data.repositories.PrivateNoteRepository;
 import ch.beerpro.domain.models.Beer;
 import ch.beerpro.domain.models.FridgeItem;
+import ch.beerpro.domain.models.MyBeer;
+import ch.beerpro.domain.models.PrivateNote;
 import ch.beerpro.domain.models.Rating;
 import ch.beerpro.domain.models.Wish;
 import ch.beerpro.presentation.details.createrating.CreateRatingActivity;
+import lombok.val;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -81,6 +96,8 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
+    private BottomSheetDialog actionDialog;
+
     private RatingsRecyclerViewAdapter adapter;
 
     private DetailsViewModel model;
@@ -115,22 +132,39 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
         recyclerView.setAdapter(adapter);
         addRatingBar.setOnRatingBarChangeListener(this::addNewRating);
+
+        View view = getLayoutInflater().inflate(R.layout.single_bottom_sheet_dialog, null);
+        Button addPrivateNoteButton = view.findViewById(R.id.addPrivateNote);
+        addPrivateNoteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putSerializable(ITEM_ID, model.getBeer().getValue().getId());
+
+                DialogFragment newFragment = new EditPrivateNoteDialogFragment();
+                newFragment.setArguments(args);
+                newFragment.show(getSupportFragmentManager(), "privatenote");
+            }
+        });
+        actionDialog = new BottomSheetDialog(this);
+        actionDialog.setContentView(view);
     }
 
     private void addNewRating(RatingBar ratingBar, float v, boolean b) {
+        startRatingActivity(v);
+    }
+
+    private void startRatingActivity(float ratingValue){
         Intent intent = new Intent(this, CreateRatingActivity.class);
         intent.putExtra(CreateRatingActivity.ITEM, model.getBeer().getValue());
-        intent.putExtra(CreateRatingActivity.RATING, v);
+        intent.putExtra(CreateRatingActivity.RATING, ratingValue);
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this, addRatingBar, "rating");
         startActivity(intent, options.toBundle());
     }
 
     @OnClick(R.id.actionsButton)
     public void showBottomSheetDialog() {
-        View view = getLayoutInflater().inflate(R.layout.single_bottom_sheet_dialog, null);
-        BottomSheetDialog dialog = new BottomSheetDialog(this);
-        dialog.setContentView(view);
-        dialog.show();
+        actionDialog.show();
     }
 
     public void notifyImprovement(View view) {
@@ -157,11 +191,24 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
 
     private void updateRatings(List<Rating> ratings) {
         adapter.submitList(new ArrayList<>(ratings));
+        for (Rating rating : ratings){
+            if(rating.getUserId().equals(model.getCurrentUser().getUid())){
+                addRatingBar.setIsIndicator(true);
+                addRatingBar.setOnRatingBarChangeListener(null);
+                addRatingBar.setRating(rating.getRating());
+                break;
+            }
+        }
     }
 
     @Override
     public void onRatingLikedListener(Rating rating) {
         model.toggleLike(rating);
+    }
+
+    public void onAddRatingClickedListener(View view){
+        actionDialog.hide();
+        startRatingActivity(0);
     }
 
     @OnClick(R.id.wishlist)
@@ -218,6 +265,43 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public static class EditPrivateNoteDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            String beerID = getArguments().getString(ITEM_ID);
+
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            EditText privateNoteEditText = new EditText(builder.getContext());
+            privateNoteEditText.setLines(4);
+            //model.getBeer().getValue().getId()
+            LiveData<PrivateNote> newprivatenote = PrivateNoteRepository.getPrivateNote(beerID);
+
+            Log.d("privatenote", "newprivatenote.getValue().getPrivateNoteValue() || " /*+ newprivatenote.getValue().toString()*/);
+            if(newprivatenote.getValue().FIELD_PRIVATENOTE == null) {
+                privateNoteEditText.setText("");
+            } else {
+                privateNoteEditText.setText(newprivatenote.getValue().FIELD_PRIVATENOTE);
+            }
+            //Start Asynchtask and check if data is available
+            builder.setMessage("Private Notiz")
+                    .setView(privateNoteEditText)
+                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            PrivateNoteRepository.addPrivateNote(beerID, privateNoteEditText.getText().toString());
+                            Log.d("privatenote", "privateNoteEditText.getText().toString() || " + privateNoteEditText.getText().toString());
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
         }
     }
 }
