@@ -131,7 +131,11 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         addPrivateNoteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putSerializable(ITEM_ID, model.getBeer().getValue().getId());
+
                 DialogFragment newFragment = new EditPrivateNoteDialogFragment();
+                newFragment.setArguments(args);
                 newFragment.show(getSupportFragmentManager(), "privatenote");
             }
         });
@@ -229,12 +233,16 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
     public static class EditPrivateNoteDialogFragment extends DialogFragment {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
+            String beerID = getArguments().getString(ITEM_ID);
+
             // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             EditText privateNoteEditText = new EditText(builder.getContext());
             privateNoteEditText.setLines(4);
-            LiveData<PrivateNote> newprivatenote = PrivateNoteRepository.getPrivateNote("9wkViKNZraQJ3kYzwMI1Elie0St1", "beerid");
-            Log.d("privatenode", "newprivatenote.getValue().getPrivateNote() || " + newprivatenote.getValue().FIELD_PRIVATENOTE);
+            //model.getBeer().getValue().getId()
+            LiveData<PrivateNote> newprivatenote = PrivateNoteRepository.getPrivateNote(beerID);
+
+            Log.d("privatenote", "newprivatenote.getValue().getPrivateNoteValue() || " /*+ newprivatenote.getValue().toString()*/);
             if(newprivatenote.getValue().FIELD_PRIVATENOTE == null) {
                 privateNoteEditText.setText("");
             } else {
@@ -245,7 +253,7 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
                     .setView(privateNoteEditText)
                     .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            PrivateNoteRepository.addPrivateNote("beerid", privateNoteEditText.getText().toString());
+                            PrivateNoteRepository.addPrivateNote(beerID, privateNoteEditText.getText().toString());
                             Log.d("privatenote", "privateNoteEditText.getText().toString() || " + privateNoteEditText.getText().toString());
                         }
                     })
@@ -259,4 +267,3 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         }
     }
 }
-

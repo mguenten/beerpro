@@ -20,18 +20,19 @@ import ch.beerpro.domain.utils.FirestoreQueryLiveDataArray;
 
 public class PrivateNoteRepository {
 
-    public static LiveData<PrivateNote> getPrivateNote(String userId, String beerId) {
+    public static LiveData<PrivateNote> getPrivateNote(String beerId) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        String currentUserId = currentUser.getUid();
         DocumentReference document = FirebaseFirestore.getInstance().collection(PrivateNote.COLLECTION)
-                .document(PrivateNote.generateId(userId, beerId));
+                .document(PrivateNote.generateId(currentUserId, beerId));
         Log.d("privatenote", "ID of dataentry || " + document.getId());
         return new FirestoreQueryLiveData<>(document, PrivateNote.class);
     }
 
     public static void addPrivateNote(String beerId, String privateNote) {
-        Log.d("privatenote", beerId +"  "+ privateNote);
+        Log.d("privatenote","inputvalue"+ beerId +"  "+ privateNote);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        //Search search = new Search(currentUser.getUid(), term);
         String currentUserId = currentUser.getUid();
         PrivateNote newPrivateNote = new PrivateNote(currentUserId, beerId, privateNote, new Date());
 

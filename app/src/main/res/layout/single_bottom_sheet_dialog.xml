@@ -70,18 +70,41 @@
             android:background="#ffeeeeee" />
 
         <Button
-            android:id="@+id/addPrivateNote"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_create_black_24dp"
-            android:drawableTint="@android:color/darker_gray"
-            android:text="Private Notiz"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="10sp" />
+                android:id="@+id/todelete"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_create_black_24dp"
+                android:drawableTint="@android:color/darker_gray"
+                android:text="Private Notiz"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="10sp"/>
 
 
+    </LinearLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffeeeeee" android:id="@+id/view3"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="57dp">
+        <Button
+                android:id="@+id/addPrivateNote"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_create_black_24dp"
+                android:drawableTint="@android:color/darker_gray"
+                android:text="Private Notiz"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="10sp" android:textAlignment="center"/>
+        <View
+                android:layout_width="1dp"
+                android:layout_height="wrap_content" android:id="@+id/view2" android:layout_weight="1"/>
     </LinearLayout>
 
 </LinearLayout>

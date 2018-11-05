@@ -22,18 +22,18 @@ public class PrivateNote implements Entity {
     private String id;
     private String beerId;
     private String userId;
-    private String privateNote;
+    private String privateNoteValue;
     private Date creationDate;
 
-    public PrivateNote(String userId, String beerId, String privateNote, Date creationDate) {
+    public PrivateNote(String userId, String beerId, String privateNoteValue, Date creationDate) {
         this.userId = userId;
         this.beerId = beerId;
-        this.privateNote = privateNote;
+        this.privateNoteValue = privateNoteValue;
         this.creationDate = creationDate;
     }
 
-    public String getPrivateNote() {
-        return privateNote;
+    public String getPrivateNoteValue() {
+        return privateNoteValue;
     }
 
     public static String generateId(String userId, String beerId) {
