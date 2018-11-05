@@ -23,14 +23,11 @@ public class PrivateNoteRepository {
     public static LiveData<PrivateNote> getPrivateNote(String beerId) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String currentUserId = currentUser.getUid();
-        DocumentReference document = FirebaseFirestore.getInstance().collection(PrivateNote.COLLECTION)
-                .document(PrivateNote.generateId(currentUserId, beerId));
-        Log.d("privatenote", "ID of dataentry || " + document.getId());
-        return new FirestoreQueryLiveData<>(document, PrivateNote.class);
+        return new FirestoreQueryLiveData<>(FirebaseFirestore.getInstance().collection(PrivateNote.COLLECTION)
+                .document(PrivateNote.generateId(currentUserId, beerId)), PrivateNote.class);
     }
 
     public static void addPrivateNote(String beerId, String privateNote) {
-        Log.d("privatenote","inputvalue"+ beerId +"  "+ privateNote);
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String currentUserId = currentUser.getUid();

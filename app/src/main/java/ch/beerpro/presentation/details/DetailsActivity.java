@@ -273,34 +273,33 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             String beerID = getArguments().getString(ITEM_ID);
 
-            // Use the Builder class for convenient dialog construction
+            setStyle(DialogFragment.STYLE_NORMAL, R.style.PrivateNoteDialogue);
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             EditText privateNoteEditText = new EditText(builder.getContext());
             privateNoteEditText.setLines(4);
-            //model.getBeer().getValue().getId()
             LiveData<PrivateNote> newprivatenote = PrivateNoteRepository.getPrivateNote(beerID);
-
-            Log.d("privatenote", "newprivatenote.getValue().getPrivateNoteValue() || " /*+ newprivatenote.getValue().toString()*/);
+            // Should be: if(newprivatenote.getValue().getPrivateNoteValue() == null){}
             if(newprivatenote.getValue().FIELD_PRIVATENOTE == null) {
                 privateNoteEditText.setText("");
+                privateNoteEditText.setHint("Private Notiz schreiben");
             } else {
-                privateNoteEditText.setText(newprivatenote.getValue().FIELD_PRIVATENOTE);
+                privateNoteEditText.setHint("Private Notiz schreiben");
+                // Folgende Zeile gibt Fehlermeldung
+                //Log.d("privatenote","get Firebase data || "+ newprivatenote.getValue().getPrivateNoteValue());
             }
-            //Start Asynchtask and check if data is available
-            builder.setMessage("Private Notiz")
+            builder.setTitle("Private Notiz")
                     .setView(privateNoteEditText)
-                    .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             PrivateNoteRepository.addPrivateNote(beerID, privateNoteEditText.getText().toString());
-                            Log.d("privatenote", "privateNoteEditText.getText().toString() || " + privateNoteEditText.getText().toString());
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
                         }
                     });
-            // Create the AlertDialog object and return it
             return builder.create();
         }
     }
