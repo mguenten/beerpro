@@ -33,6 +33,7 @@ import butterknife.OnClick;
 import butterknife.Optional;
 import ch.beerpro.GlideApp;
 import ch.beerpro.R;
+import ch.beerpro.data.repositories.MyBeersRepository;
 import ch.beerpro.data.repositories.PrivateNoteRepository;
 import ch.beerpro.domain.models.Beer;
 import ch.beerpro.domain.models.FridgeItem;
@@ -279,14 +280,14 @@ public class DetailsActivity extends AppCompatActivity implements OnRatingLikedL
             EditText privateNoteEditText = new EditText(builder.getContext());
             privateNoteEditText.setLines(4);
             LiveData<PrivateNote> newprivatenote = PrivateNoteRepository.getPrivateNote(beerID);
-            // Should be: if(newprivatenote.getValue().getPrivateNoteValue() == null){}
+            // if(there is a private Note) { set field value} else { set placeholder }
             if(newprivatenote.getValue().FIELD_PRIVATENOTE == null) {
                 privateNoteEditText.setText("");
                 privateNoteEditText.setHint("Private Notiz schreiben");
             } else {
                 privateNoteEditText.setHint("Private Notiz schreiben");
                 // Folgende Zeile gibt Fehlermeldung
-                //Log.d("privatenote","get Firebase data || "+ newprivatenote.getValue().getPrivateNoteValue());
+                Log.d("privatenote","get Firebase data || "/*+ newprivatenote.getValue().getPrivateNoteValue()*/);
             }
             builder.setTitle("Private Notiz")
                     .setView(privateNoteEditText)

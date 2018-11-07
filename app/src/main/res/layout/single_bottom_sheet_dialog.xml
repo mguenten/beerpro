@@ -12,16 +12,17 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/addPlace"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_place_black_24dp"
-            android:drawableTint="@android:color/darker_gray"
-            android:text="Ort Hinzufügen"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="10sp" />
+                android:id="@+id/addRating"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_star_black_24dp"
+                android:drawableTint="@android:color/darker_gray"
+                android:onClick="onAddRatingClickedListener"
+                android:text="Neues Rating"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="10sp"/>
 
         <View
             android:layout_width="1dp"
@@ -29,16 +30,18 @@
             android:background="#ffeeeeee" />
 
         <Button
-            android:id="@+id/addPrice"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/ic_attach_money_black_24dp"
-            android:drawableTint="@android:color/darker_gray"
-            android:text="Meinen Preis Hinzufügen"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="10sp" />
+                android:id="@+id/addPrivateNote"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_create_black_24dp"
+                android:drawableTint="@android:color/darker_gray"
+                android:text="Private Notiz"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="10sp"/>
+
+
 
     </LinearLayout>
 
@@ -71,39 +74,18 @@
             android:background="#ffeeeeee" />
 
         <Button
-                android:id="@+id/addPrivateNote"
+                android:id="@+id/notifyImprovement"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_create_black_24dp"
+                android:onClick="notifyImprovement"
+                android:drawableTop="@android:drawable/ic_menu_manage"
                 android:drawableTint="@android:color/darker_gray"
-                android:text="Private Notiz"
+                android:text="Verbesserungsvorschlag melden"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="10sp"/>
 
-
-    </LinearLayout>
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#ffeeeeee" android:id="@+id/view3"/>
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="57dp">
-        <Button
-            android:id="@+id/notifyImprovement"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="notifyImprovement"
-            android:drawableTop="@drawable/ic_create_black_24dp"
-            android:drawableTint="@android:color/darker_gray"
-            android:text="Verbesserungsvorschlag melden"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="10sp" />
 
 
     </LinearLayout>
